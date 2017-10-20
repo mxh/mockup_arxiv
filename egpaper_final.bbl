@@ -1,0 +1,140 @@
+\begin{thebibliography}{10}\itemsep=-1pt
+
+\bibitem{Houzz}
+{houzz}.
+\newblock \\url{https://www.houzz.co.uk/}.
+
+\bibitem{CPLEX}
+{IBM ILOG CPLEX Optimizer}.
+\newblock
+  \\url{http://www-01.ibm.com/software/integration/optimization/cplex-optimizer/}.
+
+\bibitem{Ceres}
+S.~Agarwal, K.~Mierle, and Others.
+\newblock Ceres solver.
+\newblock \url{http://ceres-solver.org}.
+
+\bibitem{OpenGM}
+B.~Andres, T.~Beier, and J.~Kappes.
+\newblock {OpenGM}: {A} {C++} library for discrete graphical models.
+\newblock {\em CoRR}, abs/1206.0111, 2012.
+
+\bibitem{Aubry:2014:CVPR}
+M.~Aubry, D.~Maturana, A.~A. Efros, B.~C. Russell, and J.~Sivic.
+\newblock Seeing 3d chairs: Exemplar part-based 2d-3d alignment using a large
+  dataset of {CAD} models.
+\newblock In {\em Proc. Conference on Computer Vision and Pattern Recognition},
+  pages 3762--3769, 2014.
+
+\bibitem{Bergstra:2013:ICML}
+J.~Bergstra, D.~Yamins, and D.~Cox.
+\newblock Making a science of model search: Hyperparameter optimization in
+  hundreds of dimensions for vision architectures.
+\newblock In {\em Proc. International Conference on Machine Learning}, pages
+  115--123, 2013.
+
+\bibitem{Dalal:2005:CVPR}
+N.~Dalal and B.~Triggs.
+\newblock Histograms of oriented gradients for human detection.
+\newblock In {\em Proc. Conference on Computer Vision and Pattern Recognition},
+  pages 886--893, 2005.
+
+\bibitem{Fisher:2012:SIGGASIA}
+M.~Fisher, D.~Ritchie, M.~Savva, T.~Funkhouser, and P.~Hanrahan.
+\newblock Example-based synthesis of 3d object arrangements.
+\newblock {\em Proc. ACM/SIGGRAPH Asia}, 2012.
+
+\bibitem{Fisher:2015:SIGGRAPH}
+M.~Fisher, M.~Savva, Y.~Li, P.~Hanrahan, and M.~Nie{\ss}ner.
+\newblock Activity-centric scene synthesis for functional 3d scene modeling.
+\newblock {\em Proc. ACM/SIGGRAPH}, 34(6):179, 2015.
+
+\bibitem{He:2016:CVPR}
+K.~He, X.~Zhang, S.~Ren, and J.~Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In {\em Proc. Conference on Computer Vision and Pattern Recognition},
+  pages 770--778, 2016.
+
+\bibitem{Hedau:2009:ICCV}
+V.~Hedau, D.~Hoiem, and D.~A. Forsyth.
+\newblock Recovering the spatial layout of cluttered rooms.
+\newblock In {\em Proc. International Conference on Computer Vision}, pages
+  1849--1856, 2009.
+
+\bibitem{HyperOpt}
+HyperOpt.
+\newblock {HyperOpt}, 2017.
+
+\bibitem{Izadinia:2016:Arxiv}
+H.~Izadinia, Q.~Shan, and S.~M. Seitz.
+\newblock {IM2CAD}.
+\newblock {\em CoRR}, abs/1608.05137, 2016.
+
+\bibitem{Li:2015:CGF}
+Y.~Li, A.~Dai, L.~J. Guibas, and M.~Nie{\ss}ner.
+\newblock Database-assisted object retrieval for real-time 3d reconstruction.
+\newblock {\em Comput. Graph. Forum}, 34(2):435--446, 2015.
+
+\bibitem{Lim:2013:ICCV}
+J.~J. Lim, H.~Pirsiavash, and A.~Torralba.
+\newblock Parsing {IKEA} objects: Fine pose estimation.
+\newblock In {\em Proc. International Conference on Computer Vision}, pages
+  2992--2999, 2013.
+
+\bibitem{Mattausch:2014:CGF}
+O.~Mattausch, D.~Panozzo, C.~Mura, O.~Sorkine{-}Hornung, and R.~Pajarola.
+\newblock Object detection and classification from large-scale cluttered indoor
+  scans.
+\newblock {\em Comput. Graph. Forum}, 33(2):11--21, 2014.
+
+\bibitem{Monszpart:2015:SIGGRAPH}
+A.~Monszpart, N.~Mellado, G.~J. Brostow, and N.~J. Mitra.
+\newblock Rapter: rebuilding man-made scenes with regular arrangements of
+  planes.
+\newblock {\em Proc. ACM/SIGGRAPH}, 34(4):103, 2015.
+
+\bibitem{Olson:2013:IJRR}
+E.~Olson and P.~Agarwal.
+\newblock Inference on networks of mixtures for robust robot mapping.
+\newblock {\em I. J. Robotics Res.}, 32(7):826--840, 2013.
+
+\bibitem{Ren:2015:NIPS}
+S.~Ren, K.~He, R.~B. Girshick, and J.~Sun.
+\newblock Faster {R-CNN:} towards real-time object detection with region
+  proposal networks.
+\newblock In {\em Proc. Advances in Neural Information Processing Systems},
+  pages 91--99, 2015.
+
+\bibitem{Shao:2014:SIGGRAPH}
+T.~Shao, A.~Monszpart, Y.~Zheng, B.~Koo, W.~Xu, K.~Zhou, and N.~J. Mitra.
+\newblock Imagining the unseen: stability-based cuboid arrangements for scene
+  understanding.
+\newblock {\em Proc. ACM/SIGGRAPH}, 33(6):209:1--209:11, 2014.
+
+\bibitem{Tsochantaridis:2005:JMLR}
+I.~Tsochantaridis, T.~Joachims, T.~Hofmann, and Y.~Altun.
+\newblock Large margin methods for structured and interdependent output
+  variables.
+\newblock {\em Journal of machine learning research}, 6(Sep):1453--1484, 2005.
+
+\bibitem{Wei:2016:CVPR}
+S.~Wei, V.~Ramakrishna, T.~Kanade, and Y.~Sheikh.
+\newblock Convolutional pose machines.
+\newblock In {\em Proc. Conference on Computer Vision and Pattern Recognition},
+  pages 4724--4732, 2016.
+
+\bibitem{Wu:2016:ECCV}
+J.~Wu, T.~Xue, J.~J. Lim, Y.~Tian, J.~B. Tenenbaum, A.~Torralba, and W.~T.
+  Freeman.
+\newblock Single image 3d interpreter network.
+\newblock In {\em European Conference on Computer Vision}, pages 365--382,
+  2016.
+
+\bibitem{Zhang:2017:CVPR}
+Y.~Zhang, S.~Song, E.~Yumer, M.~Savva, J.~Lee, H.~Jin, and T.~A. Funkhouser.
+\newblock Physically-based rendering for indoor scene understanding using
+  convolutional neural networks.
+\newblock In {\em Proc. Conference on Computer Vision and Pattern Recognition},
+  2017.
+
+\end{thebibliography}

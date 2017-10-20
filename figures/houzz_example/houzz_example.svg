@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="720.06989mm"
+   height="187.96001mm"
+   viewBox="0 0 2551.4287 666.00002"
+   id="svg11521"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="houzz_example.svg">
+  <defs
+     id="defs11523" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="1325"
+     inkscape:cy="172.99999"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1200"
+     inkscape:window-x="1680"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata11526">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(415.71426,152.06638)">
+    <image
+       sodipodi:absref="/mnt/thorin_data/houzz/75dce05aa6c33001f169df2a7c95403edad461bc.jpg"
+       y="-152.06638"
+       x="-415.71426"
+       id="image12096"
+       xlink:href="file:///mnt/thorin_data/houzz/75dce05aa6c33001f169df2a7c95403edad461bc.jpg"
+       preserveAspectRatio="none"
+       height="666"
+       width="500" />
+    <image
+       sodipodi:absref="/mnt/thorin_data/houzz/d2082111fcc581e6ee6581253763170e6e472525.jpg"
+       y="-152.06638"
+       x="97.142914"
+       id="image12156"
+       xlink:href="file:///mnt/thorin_data/houzz/d2082111fcc581e6ee6581253763170e6e472525.jpg"
+       preserveAspectRatio="none"
+       height="666"
+       width="500" />
+    <image
+       sodipodi:absref="/mnt/thorin_data/houzz/791028afa9430006605157e1dc5096d94d80bfd8.jpg"
+       y="-152.06638"
+       x="610.00012"
+       id="image12366"
+       xlink:href="file:///mnt/thorin_data/houzz/791028afa9430006605157e1dc5096d94d80bfd8.jpg"
+       preserveAspectRatio="none"
+       height="666"
+       width="500" />
+    <image
+       sodipodi:absref="/mnt/thorin_data/houzz/6f76badcb261b259c298b787f0afe1541413bdf4.jpg"
+       y="-152.06638"
+       x="1122.8573"
+       id="image12396"
+       xlink:href="file:///mnt/thorin_data/houzz/6f76badcb261b259c298b787f0afe1541413bdf4.jpg"
+       preserveAspectRatio="none"
+       height="666"
+       width="500" />
+    <image
+       sodipodi:absref="/mnt/thorin_data/houzz/182f35702f5866d2b400385be45b7d9ba7044867.jpg"
+       y="-152.06638"
+       x="1635.7145"
+       id="image12546"
+       xlink:href="file:///mnt/thorin_data/houzz/182f35702f5866d2b400385be45b7d9ba7044867.jpg"
+       preserveAspectRatio="none"
+       height="666"
+       width="500" />
+  </g>
+</svg>
