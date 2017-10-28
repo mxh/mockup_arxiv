@@ -8,12 +8,16 @@
 \usepackage{amssymb}
 \usepackage{import}
 \usepackage{subcaption}
+% Necessary for sideways figures
+\usepackage{rotating}
 \usepackage{bm}
 
 \linespread{0.992}
 
 \newcommand{\bb}[1]{{\bm{#1}}}
 \newcommand\MatTableStrut{\rule{0pt}{8ex}\rule[-8ex]{0pt}{0pt}}
+\newcommand{\NC}[1]{{\textbf{\color{blue}[NC: #1]}}}
+\newcommand{\nc}[1]{{\textbf{\color{blue}[NC: #1]}}}
 
 % Include other packages here, before hyperref.
 
@@ -25,15 +29,16 @@
 \cvprfinalcopy % *** Uncomment this line for the final submission
 
 \def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
-\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{xxxx}}}}
 
 % Pages are numbered in submission mode, and unnumbered in camera-ready
 %\ifcvprfinal\pagestyle{empty}\fi
-\setcounter{page}{4321}
+\setcounter{page}{1}
 \begin{document}
 
 %%%%%%%%% TITLE
-\title{Finding Chairs in Indoor Scenes under Heavy Occlusion using Scene Statistics}
+\title{\textsc{SeeThrough}: Finding Chairs in Heavily Occluded Indoor Scenes}
+%%under Heavy Occlusion using Scene %%Statistics}
 
 \author{Moos Hueting\\
 University College London\\
@@ -46,17 +51,14 @@ University College London\\
 \and
 Vladimir Kim\\
 Adobe Systems\\
-San Jose\\
 {\tt\small vokim@adobe.com}
 \and
 Ersin Yumer\\
 Adobe Systems\\
-San Jose\\
 {\tt\small yumer@adobe.com}
 \and
 Nathan Carr\\
 Adobe Systems\\
-San Jose\\
 {\tt\small ncarr@adobe.com}
 \and
 Niloy Mitra\\
@@ -70,28 +72,23 @@ University College London\\
 %%%%%%%%% ABSTRACT
 \begin{abstract}
     3D geometry mockups of single images of indoor scenes are useful for many
-    purposes including interior design, content creation for virtual reality
-    and image manipulation.  Unfortunately, modeling a scene from an image by
-    hand requires expert knowledge and is time-consuming. We aim to construct
+    applications including interior design, content creation for virtual reality,
+    and image manipulation.  Unfortunately, manually modeling a scene from a single image is tedious and requires expert knowledge. We aim to construct
     scene mockups from single images automatically. However, automatically
     inferring 3D scenes from 2D images is an ill-posed problem, as 2D images
-    are projections of many meaningful attributes (e.g. lighting, material,
-    form), with objects regularly being occluded by themselves or others.
-    Performance of recent advances in scene mockup generation mirror this
-    observation, and work mostly on fully visible objects. To improve beyond
-    this baseline we need to take into account contextual information,
-    exploiting the fact that objects co-occur mostly in highly regular
-    configurations. We exploit this regularity in the form of prior
-    information.  Specifically, we first use a neural network to extract
+    are projections of many meaningful attributes (e.g., geometry, illumination, material), with objects regularly being occluded by themselves or others.
+    Recent systems targeting scene mockup  mirror this
+    observation and work mostly on fully visible objects. To improve the state-of-the-art we need to take into account contextual information,
+    exploiting the fact that objects co-occur mostly in typical regular
+    configurations. We exploit such regularity in the form of data-driven scene priors.  Specifically, we first use a neural network trained on scene arrangement to extract
     keypoints, then feed these keypoints to a candidate object generation
     stage. From these candidates, an optimal selection is then made using
-    pairwise co-occurance statistics, gleaned from a database of 3D scenes.
-    This process is iterated, allowing for candidates with low keypoint
+    pairwise co-occurrence statistics, discovered from a database of 3D scenes.
+    We iterate the process allowing for candidates with low keypoint
     response to be detected based on the location of neighbouring objects. We
     demonstrate that our pipeline outperforms combinations of state-of-the-art
     single object methods, especially for scenes with severely occluded
-    objects. All code, training data and scene statistics are released for the
-    benefit of the community.
+    objects. All code, training data, and scene statistics will be available for research use. 
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
@@ -100,24 +97,22 @@ Large sets of 3D indoor scenes are useful for purposes ranging from
 architecture and product design to virtual reality content and game asset
 creation. Aside from being used directly as a resource for rendering or interactive purposes,
 statistics extracted from them can be used to gain insight into
-how objects are commonly used, and how they are commonly placed with respect to each other.
-However, such sets are unfortunately hard to come by and expensive to manually
+how objects are commonly used, and how they are commonly arranged. 
+However, such information is unfortunately hard to come by as it is tedious and expensive to manually
 create. In contrast, 2D photographs of such indoor scenes are widely and freely
-available, as are large databases of individual 3D models. It makes sense,
-then, to try and convert 2D photographs to 3D scenes making use of 3D models.
+available, as are large databases of individual 3D models. A natural approach for creating 3D arrangements would be to convert 2D photographs into 3D scenes by making use of large 3D model repositories.
 This gives rise to an essential problem in computer vision and graphics, which
-we will henceforth call the \emph{mockup problem}: given a single 2D photograph
-and a database of 3D models, place instances from this database into a 3D scene
-as to reconstruct the photograph as accurately as possible.
+we will henceforth call the {\bf mockup problem}: {\em given a single 2D photograph
+and a database of 3D models, select and place instances from this database into a 3D scene
+as to accurately reconstruct the photographed scene arrangement. }
 
 The problem is inherently ill-posed, as photographs are the result of the
-projection of many complex attributes (e.g. geometry, material, illumination).
+projection of many complex attributes (e.g.,  geometry, material, illumination).
 Indeed, we are faced with reconstructing an entire dimension that was lost when the
 photograph was taken. Additionally, inter- and intra-object occlusions limit
 the amount of visual information available for certain objects, making the
-reconstruction process more difficult still. It is possible for computer vision
-algorithms to make reasonable inferences from a single natural image by relying
-on relevant \emph{prior knowledge} about the image in question. Even so, the
+reconstruction process more difficult. It is now possible for algorithms to make reasonable inferences from a single natural image by relying
+on relevant \emph{prior knowledge} about the image in question, at least under no or very limited occlusion. Even so, the
 complexity of the problem, together with the difficulty of gathering large
 amounts of training data, makes the mockup problem a highly challenging one.
 
@@ -129,13 +124,13 @@ simplest of scenes. Moreover, they work on a single object basis, discarding
 any more high-level information that might be present. Simply combining these
 methods thus yields limited success (see Section~\ref{sec:ch4:evaluation}).
 
-In this paper, we suggest that in order to improve beyond this baseline, we need
-to reason about the scene on a more global basis, and inject deeper knowledge of
+In this paper, we suggest that in order to improve beyond baseline approaches that focus on single-object placement, we need
+to reason more globally, and inject deeper knowledge of
 the domain into the optimization process. Our key insight is that scenes
 typically exhibit significant regularity in terms of co-occurrence of objects,
 which can be exploited as explicit prior information to make predictions about
 object identity, placement and orientation, even when such objects are in
-highly occluded regions, and thus single-object based methods fail.
+highly occluded regions.
 
 \begin{figure}
     \includegraphics[width=\linewidth]{figures/occlusion_example/occlusion_example}
@@ -144,8 +139,8 @@ highly occluded regions, and thus single-object based methods fail.
     \label{fig:ch4:occlusion_example}
 \end{figure}
 
-Intuitively, this approach makes sense -- it matches the way we as humans
-reason under similar noisy conditions. A heavily occluded chair is still easily
+We hypothesize that the above approach matches the way we as humans
+reason under similar occluded conditions. A heavily occluded chair is still easily
 distinguishable as such due to the presence of other chairs and a table (see
 Figure~\ref{fig:ch4:occlusion_example}), as we have a good understanding of
 typical chair-table arrangements. By explicitly modeling this type of
@@ -172,28 +167,27 @@ appropriate data annotation effort.
 %specifically in terms of relative translation and orientation. 
 %
 The contributions of this paper are:
+%
+(i)~a keypoint estimation network for estimating relevant keypoints of
+          multiple instances of chairs in a single image; 
+(ii)~a pairwise co-occurrence model capturing likelihood of co-occurring
+          chair instances; 
+(iii)~an end-to-end pipeline for finding chairs in single images
+          that outperforms current state-of-the-art; and 
+(iv)~a ground-truth dataset of 100 scenes for testing performance of similar methods.
 
-\begin{itemize}
-    \item a keypoint estimation network for estimating relevant keypoints of
-          multiple instances of chairs in a single image,
-    \item a pairwise co-occurrence model capturing likelihood of co-occurring
-          chair instances,
-    \item an end-to-end pipeline for finding chairs in single images
-          that beats the state-of-the-art,
-    \item a ground-truth dataset of 100 scenes for testing performance of similar methods.
-\end{itemize}
 %------------------------------------------------------------------------
 \section{Related Work}
 \label{sec:related}
 
-\paragraph{Scene mockups} Automatic scene mockup generation research is recently
+\paragraph{Scene mockups.} Automatic scene mockup generation research is recently
 gaining acceleration, mainly due to the ubiquity of the new generation capture
 methods that enable partial 3D and/or depth capture.
 Mattausch et al.~\cite{Mattausch:2014:CGF} used 3D point cloud input to identify
 repeated objects by clustering similar patches. Li et al.~\cite{Li:2015:CGF}
 utilize an RGB-D sensor to scan an environment in real time, and use the depth
-input to detect 3D objects queried from a database. Note that these works take
-3D data as input, where we take a single 2D image.
+input to detect 3D objects queried from a database. While these works take
+3D data as input, our method relies only on a single rgb image.
 
 Most recently, Izadinia et al.~\cite{Izadinia:2016:Arxiv} demonstrated
 scene reconstruction with CAD models from a single image using image based
@@ -205,17 +199,17 @@ reconstruction. On the contrary, our novel pairwise based search incorporates
 high level relationships typical to indoor scenes to recover from such failures
 successfully.
 
-\paragraph{3D to 2D alignment} An important part of the scene mock up process
+\paragraph{3D to 2D alignment.} An important part of the scene mockup process
 involves the fine-pose alignment of a given 3D object to a 2D image. 
-Lin et al.~\cite{Lim:2013:ICCV} approached the problem from a local image
-statistics perspective and used image-space features to align a given furniture
-model to a given image. Aubry et al.~\cite{Aubry:2014:CVPR} utilized a
+Lin et al.~\cite{Lim:2013:ICCV} used local image
+statistics perspective along with image-space features to align a given furniture
+model to an image. Aubry et al.~\cite{Aubry:2014:CVPR} utilized a
 discriminative visual element processing step for each shape in a 3D model
-database, which are then used to localize and align models to given 2D
+database, which is then used to localize and align models to given 2D
 photographs of indoor scenes. Like most existing methods, their approach breaks
-down under significant occlusion. Our method is more robust in these cases, as
+down under moderate to high occlusion. Our method performs better, as
 other nearby objects can provide higher order information to fill in the lost
-information. We compare our method with Aubry et al. as a baseline and show
+information. We compare our method with Aubry et al. and show
 favourable results (see Section~\ref{sec:ch4:evaluation}).
 
 \paragraph{Scene priors for reconstruction.} Scene arrangement priors have been
@@ -234,35 +228,35 @@ compact and primarily encode the repetition of similar shapes (such as two side
 by side chairs) across pose and location.  This compact and simple template
 representation help ensure our search is tractable at runtime. 
 %------------------------------------------------------------------------
-\section{Motivation and Overview}
-\begin{figure}[h!tb]
-    \includegraphics[width=\linewidth]{figures/baseline_foreshadowing/baseline_foreshadowing}
-    \caption[Baseline sample]{Methods based only on the image quickly fail in the presence of less than ideally visible chairs. Our method deals with this situation much better.}
-    \label{fig:ch4:baseline_foreshadowing}
-\end{figure}
-To understand the motivation for our approach, we will consider the problem
-from a high level.  Summarily spoken, we are constructing a method that
-converts a 2D photograph to a 3D scene.  The most straightforward and classical
+\section{Overview}
+
+Our goal is to construct a method that
+converts a 2D photograph to a 3D scene.  The most classical
 way of doing so would be to train some machine learning method on some feature
 representation of many examples of 2D photograph / 3D scene pairs and use the
 resulting classifier as our mockup black box. Such an approach can be easily
 constructed from a combination of existing methods. It turns out, however, that
 such methods fail badly when confronted with all but the simplest of scenes.
 In fact, in our evaluation (Section~\ref{sec:ch4:evaluation}) we compare our
-method with two baselines that follow this approach. Foreshadowing some of
+method with two alternate methods that follow this approach. Foreshadowing some of
 their results in the left side of Figure~\ref{fig:ch4:baseline_foreshadowing}
 shows that chairs that are obviously visible get placed correctly, but any
 instances that are a little harder to see fail to be selected.
 
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{figures/baseline_foreshadowing/baseline_foreshadowing}
+    \caption[Baseline sample]{Methods based only on the image quickly fail in the presence of less than ideally visible chairs. Our method deals with this situation much better.}
+    \label{fig:ch4:baseline_foreshadowing}
+\end{figure}
+
+
 To understand this failure, and more importantly how to circumvent it, it is
 useful to consider how we as humans are capable of understanding these kind of
 scenes. Looking at Figure~\ref{fig:ch4:context_example}, we see a selection of chairs, some
-heavily occluded and some clearly visible, in 3 different conditions.  In the
-first condition, we see the full scene, in the second only the local context
-and in the last condition we only see the pixels that belong to the chair
-itself. It is clear to see that for the recognition of the unoccluded chair the
-environment is not important -- the shape of the object is clearly visible, and
-we immediately recognize the chair. However, in the heavily occluded case, the
+heavily occluded and some clearly visible, in different conditions: (i)~we see the full scene, (ii)~only the local context, or (iii)~only  the pixels that belong to the chair
+itself. Observe that the
+environment is not important for the recognition of the unoccluded chair  -- the shape of the object is clearly visible and
+we immediately recognize the chair. However, under heavily occlusion, the
 task of recognizing the chair becomes easier as more context gets added. For
 the last column, we might hypothesize that the image regions belong to a chair,
 but we have no way of confirming this for certain -- unless the context is
@@ -276,27 +270,27 @@ making the classification of the marked object as ``chair'' harder}
     \label{fig:ch4:context_example}
 \end{figure}
 
-Clearly, the addition of context gives us extra information in classifying and
-posing the objects in a scene.  But this is not the whole story. Importantly,
-the extra information we are given when seeing the entire image is only useful
+We observe that the addition of context provides extra information in classifying and
+posing the objects in a scene.   Importantly,
+the extra information obtained from the entire image is only useful
 given prior knowledge we have built up over previous experiences.  In this
-particular example, the added context helps us only because we know that chairs
+particular example, the added context helps only because we know that chairs
 often occur together with other chairs and tables.  Given this prior knowledge
 and the global context of the object, our recognition efficacy is enhanced.
 
 This insight is what we capture in our approach to the scene mockup problem: to
 maximize performance on the mockup task, we need to consider both local
 information and the context the objects are placed in. Furthermore, to
-understand this context we need to tell the system what usual scenes look like.
+understand this context we need to teach the system what usual scenes look like.
 
-We express these notions in our method as follows: we will extract \emph{local}
+We express these notions in our method as follows: we  extract \emph{local}
 information from the input image using a keypoint detection network
 (Section~\ref{sec:ch4:keypoint_maps}), then \emph{model} the prior knowledge
-about how scenes are usually built up (Section~\ref{ssec:ch4:scene_statistics}),
+about how scenes are usually arranged (Section~\ref{ssec:ch4:scene_statistics}),
 finally combining this model with the keypoints to find chair instances from a
-\emph{global} perspective (Section~\ref{ssec:ch4:graph_optimization}).  This
-added high level information allows us to push performance past that of the
-previously mentioned approach of using only the input data itself (see
+\emph{global} perspective (Section~\ref{ssec:ch4:graph_optimization}).  The
+added high level information pushes the performance past that of the
+alternative approach of using only the input data itself (see
 Figure~\ref{fig:ch4:baseline_foreshadowing}, right).  In the next section, we
 will go through each of these steps in detail.
 
@@ -309,7 +303,7 @@ will go through each of these steps in detail.
 \end{figure}
 Our pipeline (Figure~\ref{fig:ch4:pipeline}) takes as input a photograph $\bb{x}$ and a database of 3D chair models
 $\bb{M}$, and outputs a mocked up 3D scene $\bb{S}$, such that the reprojection
-of $\bb{S}$ with the separately estimated camera $C$ results in an image as similar as possible to $\bb{x}$ (see Figure~\ref{fig:ch4:intended_outcome}).
+of $\bb{S}$ with the  estimated camera $C$ results in an image that approximates the photograph  $\bb{x}$ (see Figure~\ref{fig:ch4:intended_outcome}).
 %The scene consists of chairs $o_i \in S$, where $o_i = \{t_i, \theta_i, s_i\}$
 %and $t_i$ is the chair's translation, $\theta_i$ is the chair's rotation around
 %the up-axis and $s_i$ is the chair's scale. 
@@ -320,24 +314,27 @@ of $\bb{S}$ with the separately estimated camera $C$ results in an image as simi
     \label{fig:ch4:intended_outcome}
 \end{figure}
 
-As a preprocessing step, the scene camera $C$ is estimated using an
-off-the-shelf technique (\cite{Hedau:2009:ICCV}), giving us focal length and
-camera orientation (Section~\ref{sec:ch4:camera_estimation}). We then enter the
-main pipeline, which consists of three stages. In the first stage, the image is
+As preprocessing, we estimate the scene camera $C$  using an
+vanishing directions~\cite{Hedau:2009:ICCV} to obtain focal length and
+camera orientation (Section~\ref{sec:ch4:camera_estimation}). Our method consists of  three stages: (i)~the image is
 passed through a keypoint estimation network that outputs a set of
 \emph{keypoint probability maps}, representing at each pixel the probability of
 the presence of a certain semantically meaningful keypoint
-(Section~\ref{sec:ch4:keypoint_maps}). In the second stage, these keypoint maps
+(Section~\ref{sec:ch4:keypoint_maps}); 
+%
+(ii)~the keypoint maps
 are combined with the estimated camera $C$ to generate candidate object
-placements (Section~\ref{sec:ch4:candidate_generation}). In the third stage, a
+placements (Section~\ref{sec:ch4:candidate_generation}); and  
+%
+(iii)~a
 selection is made among these candidates by optimizing an objective function
 which combines object-to-keypoint-map matching with pairwise placement agreement
 according to a pre-trained object co-occurrence model
 (Section~\ref{sec:ch4:optimization}). The second and third stages are then
 iterated, this time taking into account the previously found objects during
 candidate generation as a strong prior (Section~\ref{sec:ch4:iteration}). This
-process is iterated until convergence. We now discuss each of these stages in
-turn.
+process is iterated until convergence. 
+
 
 \subsection{Camera estimation}
 \label{sec:ch4:camera_estimation}
@@ -551,6 +548,7 @@ See Figure~\ref{fig:ch4:pca_dimensions}.
 We define $T(\bb{p})$ as the reprojection of PCA parameters $\bb{p}$ to 3D world space, i.e.
 the instantiated coordinates of one particular instance of the chair template.
 
+\vspace{-1mm}
 \subsubsection{Candidate keypoint sets}
 Finally, we will fit the generated chair template $T$ to the found keypoint
 locations $\bb{Q}$.  Unfortunately, we do not have any correspondences between the
@@ -601,14 +599,14 @@ each stage in turn.
 \paragraph{First stage -- optimization w.r.t. 2 keypoints}
 In the first stage, we find the optimal parameters such that the reprojection of the chair template's keypoints line up with $\bb{K}_i$.
 We define the reprojection $z_i$ of each keypoint $k_i, i \in \{u, v\}$ as
-
+%
 \[ z_i = P(R(s[T(\bb{t})]_i, \theta) + \bb{t}, C), \]
-
+%
 where $R$ represents rotation, and $P$ represents camera projection.
 
 The objective function is then simply the summed mean squared error of these reprojections w.r.t. the data:
 
-\[ L = \sum_{i \in \{u, v\}} ||z_i - k_i||^2 \]
+\[ L = \sum_{i \in \{u, v\}} \|z_i - k_i \|^2 \]. 
 
 We initialize the parameters as $\bb{t} = \bb{0}, \theta = 0, s = 1,
 \bb{p} = \bb{0}$. Furthermore, we add an L2 regularization term to both
@@ -621,8 +619,10 @@ finetune the parameters by also taking into account the other keypoint location 
 Note that we now go back to using the keypoint location maps themselves instead
 of the extracted local maxima -- we do not optimize for exact location anymore, and
 allow the final reprojection to deviate from the maxima in each individual keypoint location map.
-Instead, we maximize the \emph{total probability} over all keypoint location maps. Our objective function thus becomes:
-\[ L = \sum_{i \in \{1, \ldots, N_k\}} ||1 - m_i(z_i)||^2, \]
+Instead, we maximize the \emph{total probability} over all keypoint location maps. Our objective function  becomes:
+%
+\[ L = \sum_{i \in \{1, \ldots, N_k\}} \|1 - m_i(z_i)\|^2, \]
+%
 where $m_i(z_i)$ represents the value of keypoint location map $m_i$ at reprojected keypoint $z_i$.
 The same L2 regularizations as in the first stage apply, and we again solve our problem using Ceres~\cite{Ceres}.
 
@@ -694,17 +694,17 @@ the keypoint location map $\bb{m}$ of the input image $\bb{x}$.  As we do not ex
 single placement to explain the entire keypoint location map, we setup the score
 as a multiplicative one, with the value only being dependent on the agreement
 of the actual keypoints the placement $o_i$ exhibits:
-
-\[ u_i = \frac{||\bb{n} \odot \bb{m}||_F}{\bb{n} \odot \bb{n}}, \]
-
-where $||\cdot||_F$ represents the Frobenius norm, and $\odot$ represents the Hadamard product.
+%
+\[ u_i = \frac{\|\bb{n} \odot \bb{m}\|_F}{\bb{n} \odot \bb{n}}, \]
+%
+where $\|\cdot\|_F$ represents the Frobenius norm, and $\odot$ represents the Hadamard product.
 
 The normalization factor ensures that a candidate that perfectly matches the
 keypoint location map of our input image $\bb{x}$ gets a score of 1.  Finally, for a specific
 candidate $o_i \in \bb{O}$, interpreting $u_i$ as a probability we get unary costs based on the log odds of $u_i$:
 \begin{align}
     U_i(0) &= 0 \\
-    U_i(1) &= -\log(\frac{u_i^\alpha}{1 - u_i^\alpha})
+    U_i(1) &= -\log\left(\frac{u_i^\alpha}{1 - u_i^\alpha}\right)
 \end{align}
 where $\alpha$ is a scaling parameter to set the sensitivity of optimization to
 the value in the keypoint maps. Our choice for the log odds means that a (scaled) score
@@ -714,11 +714,11 @@ cost when selected, and otherwise \emph{increases} it.
 \paragraph{Pairwise cost} The pairwise cost is based entirely on the fitted GMM. We extract
 the relative translation $\bb{\delta}_t$ and orientation $\delta_\theta$, and evaluate
 the trained GMM to get our raw pairwise score:
-\[ p_{ij} = GMM(o_i, o_j) \]
+\[ p_{ij} = GMM(o_i, o_j). \]
 The final pairwise score is then again based on the log odds corresponding to $p_{ij}$. It only applies when two objects co-occur:
 \begin{align}
     P_{ij}(0, 0) &= P_{ij}(1, 0) = P_{ij}(0, 1) = 0 \\
-    P_{ij}(1, 1) &= -\log(\frac{p_{ij}^\beta}{1 - p_{ij}^\beta})
+    P_{ij}(1, 1) &= -\log\left(\frac{p_{ij}^\beta}{1 - p_{ij}^\beta}\right)
 \end{align}
 with $\beta$ a scaling parameter similar to $\alpha$.
 
@@ -755,27 +755,27 @@ weighted distance to the closest mixture mean (see Figure~\ref{fig:ch4:max_mixtu
 details).  In fact, in our case it makes sense to only optimize with respect to
 the closest mean, and not all means: a chair should either be encouraged to be
 next to another chair, or opposite, but never both. This replaces the original GMM likelihood function
-
+%
 \[ p_\mathrm{GMM}(\bb{\delta}) = \sum_i w_i N(\bb{\mu}_i, \bb{\Sigma}_i) \]
-
+%
 with the Max-Mixture likelihood function
-
+%
 \[ p_\mathrm{Max}(\bb{\delta}) = \max_i w_i N(\bb{\mu}_i, \bb{\Sigma}_i), \]
-
+%
 where $\bb{\delta} = \begin{bmatrix} \bb{\delta}_t \\ \delta_\theta
 \end{bmatrix}$ is the relative translation and orientation of the new candidate
 w.r.t. the already placed object, and $w_k$ is the weight of the $k$th mixture in
 the model.
 
 Taking the negative log likelihood gives 
-
+%
 \[ -\log(p_\mathrm{Max}(\bb{\delta})) = \min_k \frac{1}{2} (\bb{\delta} - \bb{\mu}_k)^T \bb{\Sigma}_k^{-1}(\bb{\delta} - \bb{\mu}_k) - \log(w_k\eta_k), \]
-
+%
 where $N(\bb{\mu}, \bb{\Sigma})$ represents the normal distribution, and $\eta_k$ is the Gaussian normalization factor for the $k$th mixture. At
 optimization time, during each step we find the mixture component $k^*$ that
 minimizes this function, and then optimize w.r.t. the negative log likelihood
 of the Gaussian of that component alone, resulting in the following term to be added to the objective function:
-\[ \frac{1}{2} (\bb{\delta} - \bb{\mu}_{k^*})^T \bb{\Sigma}_{k^*}^{-1}(\bb{\delta} - \bb{\mu}_{k^*}) \]
+\[ \frac{1}{2} (\bb{\delta} - \bb{\mu}_{k^*})^T \bb{\Sigma}_{k^*}^{-1}(\bb{\delta} - \bb{\mu}_{k^*}). \]
 
 By decoupling the component selection from the optimization step, we've
 restored the nice properties of the single Gaussian negative log likelihood.
@@ -792,9 +792,9 @@ As the already selected placements are not part of the optimization during later
 the influence of the GMM on a new candidate placement w.r.t. already selected placements becomes
 a unary cost. So, for each candidate placement in the second iteration, we add a term to $U_i(1)$
 w.r.t. each of the already selected placements:
-
-\[ -\log(\frac{GMM(o_i, o^*_j)^\beta}{1 - GMM(o_i, o^*_j)^\beta}) \]
-
+%
+\[ -\log\left(\frac{GMM(o_i, o^*_j)^\beta}{1 - GMM(o_i, o^*_j)^\beta}\right). \]
+%
 With these modifications, the candidate generation step and candidate selection
 step are iterated until convergence, i.e. until no new objects are added to the
 scene.
@@ -806,10 +806,10 @@ As a final step, we find the chair $g^*$ in our database $\bb{M}$ that best fits
 template. To do so, we reproject the 3D keypoint coordinates of each chair in
 the database to the PCA coordinate space, and find the chair whose PCA
 coordinates are closest to the PCA coordinates of our template:
-
-\[ g^* = \arg\min_{g \in \bb{M}} ||[\mathrm{PCA(g)}]_0^3 - \bb{p}||^2, \]
+%
+\[ g^* = \arg\min_{g \in \bb{M}} \|[\mathrm{PCA(g)}]_0^3 - \bb{p}\|^2, \]
 where $\bb{p}$ are the PCA coordinates of the candidate's template.
-
+%
 The resulting chair models together with their transform constitute our final scene mockup.
 
 \subsection{Hyper parameters}
@@ -952,7 +952,6 @@ Figure~\ref{fig:ch4:gt_annotation}). We use the automatically estimated camera
 parameters, making sure we discard any scenes for which the camera estimation
 is completely off.  We used this tool to fully annotate 100 scenes, which were
 randomly selected from our \textsc{Houzz} dataset of 1000 images.
-%The entire set of annotated scenes can be found in Appendix~\ref{app:ch4:gt}.
 
 \begin{figure}
     \includegraphics[width=\linewidth]{figures/groundtruth_annotation/groundtruth_annotation}
@@ -1113,9 +1112,9 @@ to convert the extracted keypoints to a 3D chair.
     \label{tab:ch4:performance}
 \end{table*}
 We ran our pipeline and the two baseline methods on the full ground truth
-annotated scene set (Section~\ref{sec:ch4:ground_truth_annotation}). A sampling
+annotated scene set (Section~\ref{sec:ch4reddy.pradyumna5@gmail.com:ground_truth_annotation}). A sampling
 of results can be seen in Figure~\ref{fig:ch4:qualitative_results}. The same visualization
-for all 100 scenes in our ground truth set can be found in Appendix~\ref{app:ch4:full_results}.
+for all 100 scenes in our ground truth set can be found in Appendix~\ref{app:results}.
 
 The baseline methods perform well when there is no occlusion in the scene.
 Chairs that are clearly visible are reconstructed reliably, as the visual
@@ -1182,19 +1181,18 @@ for the full pipeline, and perhaps most importantly the PercCorrectFull F1 measu
 
 \section{Discussion}
 We proposed a method for automatically finding chairs in a photograph of a structured scene.
-Our key insight which gives us an advantage over other methods is the incorporation of higher level
-scene statistics, allowing us to reason more accurately about objects that are highly occluded.
-Through quantitative and qualitative evaluation, we have shown a considerable increase in performance
-across multiple measures. Nevertheless, some limitations of our method remain:
+Our key insight is the incorporation of higher level
+scene statistics that allows more accurate reasoning about medium to highly occluded objects. 
+We demonstrate considerable quantitative and qualitative performance improvement across multiple measures. Nevertheless, our method suffers from the following limitations:
 \begin{itemize}
-    \item Our method is currently only suited to chairs. However, this is not a limitation of the method, and with a proper data annotation effort 
+    \item Our method is currently only evaluated on chairs. However, this is not a limitation of the method, and with a proper data annotation effort 
         it could be extended to arbitrary other classes. Note that adding more classes will likely improve the accuracy of finding chairs by themselves as well,
         as there will be more scene information to draw from.
-    \item The keypoint network is currently trained with 500 sample images. This is a very small set of data, and the performance of the network has clear room for improvement
+    \item The keypoint network is currently trained with 500 sample images. This is a small set of data, and the performance of the network has potential room for improvement
         through the addition of more training data. However, gathering such data is expensive. Finding a better way to incorporate large amounts of synthetic training
         data into the pipeline is an interesting avenue for future work.
-    \item After candidate selection, we do not reoptimize the position and orientation of each object. As we now have the added information of the location of the other objects, 
-        this could result in more accurate object placements.
+    \item After candidate selection, we do not reoptimize the placement of each object. As we now have the added information of the location of the other objects, 
+        this may result in more accurate object placements.
     \item We do not explicitly model style. Although the use of the chair template does have some influence on the outer shape of the chair being used, there are many more
         properties that could be modelled for a more convincing mockup.
 \end{itemize}
@@ -1204,5 +1202,9 @@ across multiple measures. Nevertheless, some limitations of our method remain:
 \bibliographystyle{ieee}
 \bibliography{egbib}
 }
+
+
+
+%\input{appendix.tex}
 
 \end{document}
